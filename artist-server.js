@@ -1,0 +1,24 @@
+const fs = require("fs");
+const path = require("path");
+const express = require("express");
+const provider = require("./scripts/data-provider.js");
+
+// create an express app
+const app = express();
+// reference our own modules
+const artists = provider.data;
+// handle requests for static resources
+app.use("/static", express.static(path.join(__dirname, "public")));
+
+// set up route handling
+const router = require("./scripts/artist-router.js");
+router.handleAllArtists(app);
+router.handleSingleArtist(app);
+router.handleSingleArtistNationality(app);
+router.handleNameSearch(app);
+
+// Use express to listen to port
+let port = process.env.PORT;;
+app.listen(port, () => {
+  console.log("Server running at port= " + port);
+});
